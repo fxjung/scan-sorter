@@ -1,6 +1,6 @@
 /test/data
 *.ipynb
-
+/julius
 
 # Created by https://www.toptal.com/developers/gitignore/api/pycharm+all,vim,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=pycharm+all,vim,python
