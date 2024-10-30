@@ -1,5 +1,9 @@
 import logging
+
+import operator as op
+
 from typing import Union
+from setuptools.dist import sequence
 from tqdm import tqdm
 from pathlib import Path
 from rich.progress import track
@@ -23,7 +27,12 @@ def n(i, N):
 
 def get_ordered_sequence(N: int):
     assert not N % 2, f"Number of pages must be even, but was {N=}"
-    return [n(i, N) - 1 for i in range(0, N)]
+    return [
+        *map(
+            op.itemgetter(0),
+            sorted(((i, n(i, N) - 1) for i in range(0, N)), key=op.itemgetter(1)),
+        )
+    ]
 
 
 def reorder_pdf(input_path: Union[str, Path], output_path: Union[str, Path]):
@@ -31,7 +40,9 @@ def reorder_pdf(input_path: Union[str, Path], output_path: Union[str, Path]):
     N = len(reader.pages)
     writer = PdfWriter()
 
-    writer.merge(position=0, fileobj=input_path, pages=get_ordered_sequence(N))
+    sequence = get_ordered_sequence(N)
+    log.debug([x + 1 for x in sequence])
+    writer.append(reader, sequence)
     writer.write(output_path)
 
 
@@ -52,7 +63,9 @@ def reorder_all_pdfs_in_directory(input_dir: Path, output_dir: Path):
             try:
                 reorder_pdf(input_path=input_path, output_path=output_path)
             except Exception as e:
-                errors.append(f'Reordering of {input_path.name} failed, error was "{e}"')
+                errors.append(
+                    f'Reordering of {input_path.name} failed, error was "{e}"'
+                )
     print(
         f"\n{len(input_paths)} files processed, "
         f"{n_skipped} skipped due to output file existing."
@@ -61,5 +74,3 @@ def reorder_all_pdfs_in_directory(input_dir: Path, output_dir: Path):
         print(f"\n{len(errors)} file(s) failed processing. See details below:")
         print("\n".join(errors))
         print()
-
-
