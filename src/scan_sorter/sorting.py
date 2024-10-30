@@ -15,6 +15,11 @@ log = logging.getLogger(__name__)
 def n(i, N) -> int:
     """
     Return the true (expected) page number of the page at position i in the input PDF.
+    The assumption being that the input pdf contains a scanned booklet,
+    with the first two pages being the two inner sides of the innermost sheet,
+    the next two pages being the two inner sides of the next sheet, and so on,
+    and the second half of the pages being the back sides of the sheets in reverse order.
+
 
     Parameters
     ----------
@@ -29,11 +34,13 @@ def n(i, N) -> int:
         True (expected) page number of the page at position i.
     """
     if i < N / 2:
+        # Front sides
         if i % 2:
             return int(N / 2 + i)
         else:
             return int(N / 2 - i)
     else:
+        # Back sides
         if i % 2:
             return int(i - N / 2)
         else:
