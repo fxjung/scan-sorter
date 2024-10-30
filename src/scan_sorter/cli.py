@@ -14,7 +14,7 @@ app = typer.Typer()
 @app.command()
 def sort():
     """
-    Sort scanned booklets PDFs
+    Sort all PDFs in the current directory and save them in a new directory.
     """
 
     input_dir = Path.cwd()

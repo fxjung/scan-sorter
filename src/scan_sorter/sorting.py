@@ -12,7 +12,22 @@ from pypdf import PdfReader, PdfWriter
 log = logging.getLogger(__name__)
 
 
-def n(i, N):
+def n(i, N) -> int:
+    """
+    Return the true (expected) page number of the page at position i in the input PDF.
+
+    Parameters
+    ----------
+    i
+        Position of the page in the input PDF (0-based).
+    N
+        Total number of pages in the input PDF.
+
+    Returns
+    -------
+    int
+        True (expected) page number of the page at position i.
+    """
     if i < N / 2:
         if i % 2:
             return int(N / 2 + i)
@@ -25,7 +40,21 @@ def n(i, N):
             return int(N - (i - N / 2))
 
 
-def get_ordered_sequence(N: int):
+def get_ordered_sequence(N: int) -> list[int]:
+    """
+    Get the sequence of (0-based) input PDF page numbers in the corrected order
+    for a booklet with N pages total.
+
+    Parameters
+    ----------
+    N
+        Number of pages in the booklet. Must be even.
+
+    Returns
+    -------
+    list[int]
+        Sequence of (0-based) input PDF page numbers in the corrected order.
+    """
     assert not N % 2, f"Number of pages must be even, but was {N=}"
     return [
         *map(
@@ -36,6 +65,16 @@ def get_ordered_sequence(N: int):
 
 
 def reorder_pdf(input_path: Union[str, Path], output_path: Union[str, Path]):
+    """
+    Reorder the pages of a single scanned booklet PDF.
+
+    Parameters
+    ----------
+    input_path
+        Path to the input PDF.
+    output_path
+        Path to the output PDF.
+    """
     reader = PdfReader(input_path)
     N = len(reader.pages)
     writer = PdfWriter()
@@ -47,6 +86,17 @@ def reorder_pdf(input_path: Union[str, Path], output_path: Union[str, Path]):
 
 
 def reorder_all_pdfs_in_directory(input_dir: Path, output_dir: Path):
+    """
+    Reorder the pages of all scanned booklet PDFs in a directory.
+    Prints stuff to stdout (to be used in CLI).
+
+    Parameters
+    ----------
+    input_dir
+        Path to the directory containing the input PDFs.
+    output_dir
+        Path to the directory where the output PDFs will be saved.
+    """
     output_dir.mkdir(exist_ok=True, parents=True)
     input_paths = [*input_dir.glob("*.pdf")]
     if not input_paths:
