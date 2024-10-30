@@ -1,0 +1,84 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scan-sorter"
+version = "0.1"
+authors = [
+    { name = "Felix Jung", email = "jung@posteo.de" },
+]
+maintainers = [
+    { name = "Felix Jung", email = "jung@posteo.de" },
+]
+description = """Blablabla"""
+keywords = ["scanning", "pdf", "documents"]
+readme = "README.md"
+requires-python=">=3.10"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3.10",
+    "Operating System :: POSIX :: Linux",
+]
+dependencies = [
+    "typer",
+    "pypdf[crypto]",
+    "tqdm",
+    "rich",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black == 23.3.0",
+    "pytest",
+    "check-manifest",
+]
+doc = [
+    "sphinx",
+    "sphinx-rtd-theme",
+]
+
+
+[project.urls]
+repository = "https://github.com/fxjung/scan-sorter"
+
+[project.scripts]
+scan-sorter = "scan_sorter.cli:app"
+
+[tool.setuptools]
+zip-safe = true
+package-dir = { "" = "src"}
+
+[tool.setuptools.packages.find]
+namespaces = true
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.toml"]
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | _deps
+  | buck-out
+  | build
+  | dist
+  | googletest
+)/
+'''
+
+# NOTE: you have to use single-quoted strings in TOML for regular expressions.
+# It's the equivalent of r-strings in Python.  Multiline strings are treated as
+# verbose regular expressions by Black.  Use [ ] to denote a significant space
+# character.
