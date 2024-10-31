@@ -3,7 +3,6 @@ import logging
 import operator as op
 
 from typing import Union
-from setuptools.dist import sequence
 from tqdm import tqdm
 from pathlib import Path
 from rich.progress import track
